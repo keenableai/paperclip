@@ -284,7 +284,7 @@ describe("AppDefinition catalog", () => {
         "google-workspace-search",
       ]),
     );
-    expect(SELF_SERVE_MCP_CANDIDATES).toHaveLength(65);
+    expect(SELF_SERVE_MCP_CANDIDATES).toHaveLength(66);
     expect(BLOCKED_MCP_PROVIDERS.map((entry) => entry.slug)).toEqual([
       "g2",
       "vercel",
@@ -450,15 +450,15 @@ describe("AppDefinition catalog", () => {
     expect(channel("slack")?.guidanceMd).toContain("reactions");
     expect(channel("slack")?.guidanceMd).toContain("direct messages");
   });
-  it("keeps a complete, unique, dated evidence ledger for all 69 researched MCP providers", () => {
+  it("keeps a complete, unique, dated evidence ledger for all 70 researched MCP providers", () => {
     // Ledger-wide date reflects the last full re-verification (2026-08-26);
     // later provider additions carry their own research evidence, but
     // bumping the shared date would overstate freshness for the other providers.
     expect(SELF_SERVE_MCP_RESEARCH.verifiedAt).toBe("2026-08-26");
-    expect(SELF_SERVE_MCP_RESEARCH.entries).toHaveLength(69);
+    expect(SELF_SERVE_MCP_RESEARCH.entries).toHaveLength(70);
     expect(
       new Set(SELF_SERVE_MCP_RESEARCH.entries.map((entry) => entry.slug)),
-    ).toHaveProperty("size", 69);
+    ).toHaveProperty("size", 70);
     for (const entry of SELF_SERVE_MCP_RESEARCH.entries) {
       expect(new URL(entry.docsUrl).protocol).toBe("https:");
       expect(new URL(entry.serverUrl).protocol).toBe("https:");
@@ -733,6 +733,17 @@ describe("AppDefinition catalog", () => {
     });
     expect(method("youcom", "mcp-free")?.credentialFields).toBeUndefined();
     expect(
+      APP_DEFINITIONS.find((app) => app.slug === "keenable")?.methods.map(
+        (candidate) => candidate.key,
+      ),
+    ).toEqual(["public-search"]);
+    expect(method("keenable")).toMatchObject({
+      transport: "mcp_remote",
+      auth: "none",
+      defaults: { serverUrl: "https://api.keenable.ai/mcp?keenable_title=paperclip" },
+    });
+    expect(method("keenable")?.credentialFields).toBeUndefined();
+    expect(
       APP_DEFINITIONS.find((app) => app.slug === "telem")?.methods.map(
         (candidate) => candidate.key,
       ),
@@ -886,7 +897,7 @@ describe("AppDefinition catalog", () => {
       "ticktick",
       "xero",
     ]);
-    expect(APP_STORE_DEFINITIONS).toHaveLength(86);
+    expect(APP_STORE_DEFINITIONS).toHaveLength(87);
     const connectableSlugs = new Set(
       CONNECTABLE_APP_DEFINITIONS.map((entry) => entry.slug),
     );
